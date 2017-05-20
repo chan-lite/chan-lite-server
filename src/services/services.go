@@ -5,7 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
-	"proxy-chan/src/sensitive"
+	"chan-lite-server/src/sensitive"
 	"sync"
 	"time"
 

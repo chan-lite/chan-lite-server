@@ -2,8 +2,8 @@ package user
 
 import (
 	"net/http"
-	"proxy-chan/src/database"
-	"proxy-chan/src/services"
+	"chan-lite-server/src/database"
+	"chan-lite-server/src/services"
 
 	"golang.org/x/crypto/bcrypt"
 

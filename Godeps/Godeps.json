@@ -1,5 +1,5 @@
 {
-	"ImportPath": "proxy-chan",
+	"ImportPath": "chan-lite-server",
 	"GoVersion": "go1.8",
 	"GodepVersion": "v79",
 	"Packages": [

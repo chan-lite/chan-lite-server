@@ -1,7 +1,7 @@
 package database
 
 import (
-	"proxy-chan/src/sensitive"
+	"chan-lite-server/src/sensitive"
 
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"

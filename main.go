@@ -1,7 +1,7 @@
 package main
 
 import (
-	"proxy-chan/src/router"
+	"chan-lite-server/src/router"
 )
 
 func main() {

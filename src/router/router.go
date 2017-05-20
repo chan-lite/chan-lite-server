@@ -3,8 +3,8 @@ package router
 import (
 	"fmt"
 	"os"
-	"proxy-chan/src/fourChan"
-	"proxy-chan/src/user"
+	"chan-lite-server/src/fourChan"
+	"chan-lite-server/src/user"
 
 	"github.com/bahlo/goat"
 )

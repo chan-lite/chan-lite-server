@@ -1,5 +1,5 @@
 {
-  "name": "proxy-chan-go",
+  "name": "chan-lite-server-go",
   "version": "1.0.0",
   "main": "main",
   "license": "MIT",
@@ -10,7 +10,7 @@
   "scripts": {
     "start": " concurrently --kill-others --raw \" npm run go-run \" ",
     "dev": " watch \" npm run start \" src ",
-    "go-run": " go get || true && PORT=5000 proxy-chan || true ",
-    "prego-run": " killall -9 proxy-chan || true "
+    "go-run": " go get || true && PORT=5000 chan-lite-server || true ",
+    "prego-run": " killall -9 chan-lite-server || true "
   }
 }
