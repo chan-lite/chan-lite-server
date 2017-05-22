@@ -5,7 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
-	"chan-lite-server/src/sensitive"
+	"os"
 	"sync"
 	"time"
 
@@ -27,7 +27,7 @@ func SetHeaderAll(w http.ResponseWriter) {
 func CreateUserToken(data jwt.MapClaims) (string, error) {
 	data["granted"] = time.Now().String()
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, data)
-	return token.SignedString([]byte(sensitive.TokenSecret))
+	return token.SignedString([]byte(os.Getenv("TOKEN_SECRET")))
 }
 
 // CheckToken - TODO
@@ -52,7 +52,7 @@ func CheckToken(token jwt.MapClaims) error {
 // DecodeToken - TODO
 func DecodeToken(tokenString string) (*jwt.Token, error) {
 	token, parseError := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
-		return []byte(sensitive.TokenSecret), nil
+		return []byte(os.Getenv("TOKEN_SECRET")), nil
 	})
 	return token, parseError
 }

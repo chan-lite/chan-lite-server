@@ -1,9 +1,9 @@
 package user
 
 import (
-	"net/http"
 	"chan-lite-server/src/database"
 	"chan-lite-server/src/services"
+	"net/http"
 
 	"golang.org/x/crypto/bcrypt"
 
@@ -21,7 +21,7 @@ func CreateUser(w http.ResponseWriter, r *http.Request, p goat.Params) {
 	password := r.FormValue("password")
 	// check data
 	if len(name) < 1 || len(email) < 1 || len(device) < 1 || len(password) < 1 {
-		services.ErrorMessage(w, "Check parameters")
+		services.ErrorMessage(w, "Required data missing")
 		return
 	}
 	// Hashing the password with the default cost of 10
