@@ -1,1 +1,1 @@
-web: proxy-chan
+web: chan-lite-server
