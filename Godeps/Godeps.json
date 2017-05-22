@@ -2,19 +2,6 @@
 	"ImportPath": "chan-lite-server",
 	"GoVersion": "go1.8",
 	"GodepVersion": "v79",
-	"Packages": [
-		"github.com/jinzhu/gorm/dialects/mysql"
-	],
-	"Deps": [
-		{
-			"ImportPath": "github.com/go-sql-driver/mysql",
-			"Comment": "v1.3-18-g382e13d",
-			"Rev": "382e13d099fcf5f5994290892ab258fbebbdc5e3"
-		},
-		{
-			"ImportPath": "github.com/jinzhu/gorm/dialects/mysql",
-			"Comment": "v1.0-156-g9acaa33",
-			"Rev": "9acaa33324bbcc78239a1c913d4f1292c12177b9"
-		}
-	]
+	"Packages": [],
+	"Deps": []
 }
