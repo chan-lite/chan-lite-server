@@ -9,25 +9,6 @@ import (
 	"github.com/bahlo/goat"
 )
 
-type chanThreadPage struct {
-	Posts []chanThreadPost
-}
-
-type chanThreadPost struct {
-	No       int64
-	Now      string
-	Name     string
-	Com      string
-	Filename string
-	Ext      string
-	W        int64
-	H        int64
-	Tn_W     int64
-	Tn_H     int64
-	Tim      int64
-	Time     int64
-}
-
 // GetThread - TODO
 func GetThread(w http.ResponseWriter, r *http.Request, p goat.Params) {
 	services.SetHeaderAll(w)
@@ -35,7 +16,7 @@ func GetThread(w http.ResponseWriter, r *http.Request, p goat.Params) {
 	board := p["board"]
 	thread := p["thread"]
 	url := "https://a.4cdn.org/" + board + "/thread/" + thread + ".json"
-	data := new(chanThreadPage)
+	data := new(database.ChanThreadPage)
 
 	requestError := services.GoroutineRequest(url, data)
 	if requestError != nil {
@@ -91,24 +72,27 @@ func SaveThread(w http.ResponseWriter, r *http.Request, p goat.Params) {
 
 	// Get thread
 	url := "https://a.4cdn.org/" + board + "/thread/" + thread + ".json"
-	data := new(chanThreadPage)
+	threadData := new(database.ChanThreadPage)
 
-	requestError := services.GoroutineRequest(url, data)
+	requestError := services.GoroutineRequest(url, threadData)
 
 	if requestError != nil {
 		services.ErrorMessage(w, "Error talking to 4chan servers")
 		return
 	}
 
-	threadDataJSON, threadDataError := services.GoroutineToJSON(data)
+	// threadDataJSON, threadDataError := services.GoroutineToJSON(threadData)
 
-	if threadDataError != nil {
-		services.ErrorMessage(w, "Error creating JSON")
+	// if threadDataError != nil {
+	// 	services.ErrorMessage(w, "Error creating JSON")
+	// 	return
+	// }
+
+	saveThreadError := database.SaveThread(userStringID, board, thread, threadData)
+	if saveThreadError != nil {
+		services.ErrorMessage(w, "Error saving thread, thread has likely already been saved")
 		return
 	}
 
-	database.SaveThread(userStringID, threadDataJSON)
-
-	services.SuccessMessage(w, userStringID)
-
+	services.SuccessMessage(w, "Complete")
 }
