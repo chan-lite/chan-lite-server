@@ -55,32 +55,40 @@ type PostSaveTest struct {
 
 // SaveThread - TODO
 func SaveThread(ID string, boardString string, threadString string, threadData *ChanThreadPage) error {
-
-	// connect to database
+	// Connect to the database.
 	db, err := Connect()
 	if err != nil {
 		return err
 	}
-
-	// 1.
-	// Save each individual post, not including image (use zero for Tim, Tn_W, Tn_H)
-	// Include reference to thread number
-	// Include check for if thread has already been saved
-	// 2. Save the thread number, along with user and board
-	// Include check if user has already save this thread before
-
-	// Check if thread has been saved already
+	// Check if the current user has saved
+	// the current thread before.
 	count := 0
-	db.Model(&ThreadSaveTest{}).Where("board = ? AND thread = ?", boardString, threadString).Count(&count)
+	db.Model(&ThreadSaveTest{}).Where(`
+		board = ? AND thread = ? AND user = ?
+	`, boardString, threadString, ID).Count(&count)
 	if count != 0 {
-		return errors.New("thread has already been saved")
-		// Another user (or maybe the same user) has saved this thread
-		// If some user error out, else copy data for new user
+		// The current user has saved the thread already.
+		// Bail out!!!
+		return errors.New("you have already saved this thread")
 	}
-
+	// Check if the thread has been saved already by a different user.
+	// If it has lets just create the link and bail out.
+	// Do NOT add posts to the database.
+	db.Model(&ThreadSaveTest{}).Where(`
+		board = ? AND thread = ?
+	`, boardString, threadString).Count(&count)
+	// Time to add the link
 	threadRow := ThreadSaveTest{Board: boardString, Thread: threadString, User: ID}
 	db.Create(&threadRow)
-
+	// Check if we should bail or bote.
+	if count != 0 {
+		// This thread has already been saved by another user.
+		// Do not copy posts, just create thread link for user.
+		return nil
+	}
+	// We need to add the posts.
+	// Add posts async, this is a heavy task.
+	// There can be up to 300 posts.
 	go func(posts []chanThreadPost) {
 		for i := 0; i < len(posts); i++ {
 			go func(post chanThreadPost) {
@@ -102,6 +110,6 @@ func SaveThread(ID string, boardString string, threadString string, threadData *
 			}(posts[i])
 		}
 	}(threadData.Posts)
-
+	// Return eagerly.
 	return nil
 }
