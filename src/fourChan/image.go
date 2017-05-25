@@ -3,7 +3,7 @@ package fourChan
 import (
 	"io/ioutil"
 	"net/http"
-	"chan-lite-server/src/services"
+	"github.com/chan-lite/chan-lite-server/src/services"
 
 	"github.com/bahlo/goat"
 )

@@ -1,8 +1,8 @@
 package fourChan
 
 import (
-	"chan-lite-server/src/database"
-	"chan-lite-server/src/services"
+	"github.com/chan-lite/chan-lite-server/src/database"
+	"github.com/chan-lite/chan-lite-server/src/services"
 	"net/http"
 	"strconv"
 
