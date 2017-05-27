@@ -14,6 +14,11 @@ func Connect() (*gorm.DB, error) {
 	// mysql
 	connectionInfo := os.Getenv("DB_USER") + ":" + os.Getenv("DB_PASSWORD") + "@tcp(" + os.Getenv("DB_HOST") + ":" + os.Getenv("DB_PORT") + ")/" + os.Getenv("DB_NAME")
 	connectionSettings := "?charset=utf8&parseTime=True&loc=Local"
+
+	if len(connectionInfo) < 10 {
+		panic("Local environment variables are not present.")
+	}
+
 	db, err := gorm.Open("mysql", connectionInfo+connectionSettings)
 
 	// postgres

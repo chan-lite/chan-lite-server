@@ -51,6 +51,7 @@ func SaveThread(w http.ResponseWriter, r *http.Request, p goat.Params) {
 	tokenString := r.FormValue("token")
 	if len(tokenString) < 1 {
 		services.ErrorMessage(w, "No token found")
+		return
 	}
 
 	// Decode token.

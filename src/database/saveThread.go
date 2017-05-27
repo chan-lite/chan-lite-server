@@ -53,6 +53,33 @@ type PostSaveTest struct {
 	Time     int64
 }
 
+// GetSavedThreads - Returns a unqiue array<string> of boards saved by the user
+//									 in the form of `g`, not `/g/`
+func GetSavedThreads(userID string) ([]string, error) {
+	var saved []string
+
+	// Connect to the database.
+	db, err := Connect()
+	if err != nil {
+		return saved, err
+	}
+
+	rows, err := db.Table("thread_save_tests").Select("board").Where("user = ?", userID).Group("thread").Rows()
+	if err != nil {
+		return saved, err
+	}
+
+	for rows.Next() {
+		var board string
+		rows.Scan(&board)
+		saved = append(saved, board)
+	}
+
+	defer db.Close()
+
+	return saved, nil
+}
+
 // SaveThread - TODO
 func SaveThread(ID string, boardString string, threadString string, threadData *ChanThreadPage) error {
 	// Connect to the database.

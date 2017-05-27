@@ -67,6 +67,10 @@ func Router() error {
 			name:    "chan_user_signin",
 			handler: user.SignIn},
 		singleRoute{
+			route:   "/chan/user/save/get/landing",
+			name:    "chan_user_thread_save_get",
+			handler: fourChan.GetSavedLanding},
+		singleRoute{
 			route:   "/chan/user/save/thread/:board/:thread",
 			name:    "chan_user_thread_save",
 			handler: fourChan.SaveThread}}
