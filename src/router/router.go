@@ -1,8 +1,8 @@
 package router
 
 import (
-	"github.com/chan-lite/chan-lite-server/src/fourChan"
-	"github.com/chan-lite/chan-lite-server/src/user"
+	"chan-lite-server/src/fourChan"
+	"chan-lite-server/src/user"
 	"fmt"
 	"net/http"
 	"os"

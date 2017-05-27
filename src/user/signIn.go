@@ -1,9 +1,9 @@
 package user
 
 import (
+	"chan-lite-server/src/database"
+	"chan-lite-server/src/services"
 	"net/http"
-	"github.com/chan-lite/chan-lite-server/src/database"
-	"github.com/chan-lite/chan-lite-server/src/services"
 
 	"golang.org/x/crypto/bcrypt"
 

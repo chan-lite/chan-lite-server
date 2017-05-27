@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/chan-lite/chan-lite-server/src/router"
+	"chan-lite-server/src/router"
 )
 
 func main() {
