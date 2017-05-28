@@ -2,8 +2,8 @@ package database
 
 import (
 	"errors"
+	"strconv"
 
-	"github.com/davecgh/go-spew/spew"
 	"github.com/jinzhu/gorm"
 )
 
@@ -157,20 +157,31 @@ func GetSavedBoard(board string, userID string, page int, perPage int) (*ChanBoa
 		return data, err
 	}
 
-	offset := perPage * (page - 1)
+	perPageString := strconv.Itoa(perPage)
+	offset := strconv.Itoa(perPage * (page - 1))
 
-	rows, err := db.Table("thread_save_tests").Limit(perPage).Offset(offset).Select("thread").Where("user = ?", userID).Rows()
-	if err != nil {
-		spew.Dump(err)
-		return data, err
+	dataRows, dataError := db.Raw(`
+		SELECT post_save_tests.* FROM thread_save_tests 
+		LEFT JOIN post_save_tests
+		ON post_save_tests.thread = thread_save_tests.thread
+		WHERE thread_save_tests.user = ?
+		GROUP BY post_save_tests.thread
+		LIMIT `+perPageString+` OFFSET `+offset+`
+	`, userID).Rows()
+	if dataError != nil {
+		return data, dataError
 	}
 
-	for rows.Next() {
-		var thread string
-		rows.Scan(&thread)
-		spew.Dump(thread)
+	for dataRows.Next() {
+		var capture chanThreadPost
+		// !important;
+		db.ScanRows(dataRows, &capture)
+		data.Threads = append(data.Threads, ChanThreadPage{
+			Posts: []chanThreadPost{capture},
+		})
 	}
+
+	defer db.Close()
 
 	return data, err
-
 }
