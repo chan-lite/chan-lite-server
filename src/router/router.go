@@ -2,6 +2,7 @@ package router
 
 import (
 	"chan-lite-server/src/fourChan"
+	"chan-lite-server/src/middleware"
 	"chan-lite-server/src/user"
 	"fmt"
 	"net/http"
@@ -69,11 +70,15 @@ func Router() error {
 		singleRoute{
 			route:   "/chan/user/save/get/landing",
 			name:    "chan_user_thread_save_get",
-			handler: fourChan.GetSavedLanding},
+			handler: middleware.Auth(fourChan.GetSavedLanding)},
+		singleRoute{
+			route:   "/chan/user/save/get/board/:board/:page/:perPage",
+			name:    "chan_user_thread_save_get_board",
+			handler: middleware.Auth(fourChan.GetSavedBoard)},
 		singleRoute{
 			route:   "/chan/user/save/thread/:board/:thread",
 			name:    "chan_user_thread_save",
-			handler: fourChan.SaveThread}}
+			handler: middleware.Auth(fourChan.SaveThread)}}
 	// Receive router from channel.
 	r := <-router
 	close(router)

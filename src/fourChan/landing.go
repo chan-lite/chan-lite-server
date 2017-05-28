@@ -4,7 +4,6 @@ import (
 	"chan-lite-server/src/database"
 	"chan-lite-server/src/services"
 	"net/http"
-	"strconv"
 
 	"github.com/bahlo/goat"
 )
@@ -48,43 +47,12 @@ func GetLanding(w http.ResponseWriter, r *http.Request, p goat.Params) {
 }
 
 // GetSavedLanding - TODO
-func GetSavedLanding(w http.ResponseWriter, r *http.Request, p goat.Params) {
-	services.SetHeaderAll(w)
+func GetSavedLanding(w http.ResponseWriter, r *http.Request, p goat.Params, userStringID string) {
 
 	url := "https://a.4cdn.org/boards.json"
 	data := new(chanLandingPageBoards)
 
-	//Token check
-	tokenString := r.FormValue("token")
-	if len(tokenString) < 1 {
-		services.ErrorMessage(w, "No token found")
-		return
-	}
-
-	// Decode token.
-	decodedToken, decodeError := services.DecodeToken(tokenString)
-	if decodeError != nil {
-		services.ErrorMessage(w, "Invalid token")
-		return
-	}
-
-	// Receive data from token.
-	tokenData := services.GetDataFromToken(decodedToken)
-	tokenInvalid := services.CheckToken(tokenData)
-	if tokenInvalid != nil {
-		services.ErrorMessage(w, "Token has expired")
-		return
-	}
-
-	// Ensure user ID is present.
-	userID := tokenData["ID"].(float64)
-	userStringID := strconv.FormatFloat(userID, 'f', -1, 64)
-	if len(userStringID) < 1 {
-		services.ErrorMessage(w, "No user ID found in token")
-	}
-
 	requestError := services.GoroutineRequest(url, data)
-
 	if requestError != nil {
 		services.Error(w)
 		return

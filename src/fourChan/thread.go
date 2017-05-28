@@ -4,7 +4,6 @@ import (
 	"chan-lite-server/src/database"
 	"chan-lite-server/src/services"
 	"net/http"
-	"strconv"
 
 	"github.com/bahlo/goat"
 )
@@ -34,10 +33,7 @@ func GetThread(w http.ResponseWriter, r *http.Request, p goat.Params) {
 }
 
 // SaveThread - TODO
-func SaveThread(w http.ResponseWriter, r *http.Request, p goat.Params) {
-
-	// Set default headers.
-	services.SetHeaderAll(w)
+func SaveThread(w http.ResponseWriter, r *http.Request, p goat.Params, userStringID string) {
 
 	// Get data from post and get.
 	board := p["board"]
@@ -47,33 +43,6 @@ func SaveThread(w http.ResponseWriter, r *http.Request, p goat.Params) {
 	thread := p["thread"]
 	if len(thread) < 1 {
 		services.ErrorMessage(w, "No thread specified")
-	}
-	tokenString := r.FormValue("token")
-	if len(tokenString) < 1 {
-		services.ErrorMessage(w, "No token found")
-		return
-	}
-
-	// Decode token.
-	decodedToken, decodeError := services.DecodeToken(tokenString)
-	if decodeError != nil {
-		services.ErrorMessage(w, "Invalid token")
-		return
-	}
-
-	// Receive data from token.
-	tokenData := services.GetDataFromToken(decodedToken)
-	tokenInvalid := services.CheckToken(tokenData)
-	if tokenInvalid != nil {
-		services.ErrorMessage(w, "Token has expired")
-		return
-	}
-
-	// Ensure user ID is present.
-	userID := tokenData["ID"].(float64)
-	userStringID := strconv.FormatFloat(userID, 'f', -1, 64)
-	if len(userStringID) < 1 {
-		services.ErrorMessage(w, "No user ID found in token")
 	}
 
 	// Get thread

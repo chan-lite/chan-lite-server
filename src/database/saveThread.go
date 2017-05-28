@@ -3,8 +3,14 @@ package database
 import (
 	"errors"
 
+	"github.com/davecgh/go-spew/spew"
 	"github.com/jinzhu/gorm"
 )
+
+// ChanBoardPage - TODO
+type ChanBoardPage struct {
+	Threads []ChanThreadPage
+}
 
 // ChanThreadPage - TODO
 type ChanThreadPage struct {
@@ -64,7 +70,7 @@ func GetSavedThreads(userID string) ([]string, error) {
 		return saved, err
 	}
 
-	rows, err := db.Table("thread_save_tests").Select("board").Where("user = ?", userID).Group("thread").Rows()
+	rows, err := db.Table("thread_save_tests").Select("DISTINCT(board)").Where("user = ?", userID).Group("thread").Rows()
 	if err != nil {
 		return saved, err
 	}
@@ -139,4 +145,32 @@ func SaveThread(ID string, boardString string, threadString string, threadData *
 	}(threadData.Posts)
 	// Return eagerly.
 	return nil
+}
+
+// GetSavedBoard - TODO
+func GetSavedBoard(board string, userID string, page int, perPage int) (*ChanBoardPage, error) {
+	data := new(ChanBoardPage)
+
+	// Connect to the database.
+	db, err := Connect()
+	if err != nil {
+		return data, err
+	}
+
+	offset := perPage * (page - 1)
+
+	rows, err := db.Table("thread_save_tests").Limit(perPage).Offset(offset).Select("thread").Where("user = ?", userID).Rows()
+	if err != nil {
+		spew.Dump(err)
+		return data, err
+	}
+
+	for rows.Next() {
+		var thread string
+		rows.Scan(&thread)
+		spew.Dump(thread)
+	}
+
+	return data, err
+
 }

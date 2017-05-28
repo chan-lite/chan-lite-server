@@ -1,8 +1,10 @@
 package fourChan
 
 import (
+	"chan-lite-server/src/database"
 	"chan-lite-server/src/services"
 	"net/http"
+	"strconv"
 
 	"github.com/bahlo/goat"
 )
@@ -50,6 +52,31 @@ func GetBoard(w http.ResponseWriter, r *http.Request, p goat.Params) {
 
 	if jsonError != nil {
 		services.Error(w)
+		return
+	}
+
+	services.Success(w, jsonString)
+}
+
+// GetSavedBoard - TODO
+func GetSavedBoard(w http.ResponseWriter, r *http.Request, p goat.Params, userStringID string) {
+	board := p["board"]
+	page, pageErr := strconv.Atoi(p["page"])
+	perPage, perPageErr := strconv.Atoi(p["perPage"])
+	if len(board) < 1 || pageErr != nil || perPageErr != nil {
+		services.ErrorMessage(w, "Check parameters")
+		return
+	}
+
+	data, err := database.GetSavedBoard(board, userStringID, page, perPage)
+	if err != nil {
+		services.ErrorMessage(w, "Error receiving saved board for user")
+		return
+	}
+
+	jsonString, jsonError := services.GoroutineToJSON(data)
+	if jsonError != nil {
+		services.ErrorMessage(w, "Error building data for client")
 		return
 	}
 
