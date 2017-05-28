@@ -76,6 +76,10 @@ func Router() error {
 			name:    "chan_user_thread_save_get_board",
 			handler: middleware.Auth(fourChan.GetSavedBoard)},
 		singleRoute{
+			route:   "/chan/user/save/get/thread/:board/:thread",
+			name:    "chan_user_thread_save_get_thread",
+			handler: middleware.Auth(fourChan.GetSavedThread)},
+		singleRoute{
 			route:   "/chan/user/save/thread/:board/:thread",
 			name:    "chan_user_thread_save",
 			handler: middleware.Auth(fourChan.SaveThread)}}

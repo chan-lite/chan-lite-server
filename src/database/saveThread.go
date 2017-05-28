@@ -185,3 +185,36 @@ func GetSavedBoard(board string, userID string, page int, perPage int) (*ChanBoa
 
 	return data, err
 }
+
+// GetSavedThread - TODO
+func GetSavedThread(userID string, board string, thread string) (*ChanThreadPage, error) {
+	data := new(ChanThreadPage)
+
+	// Connect to the database.
+	db, err := Connect()
+	if err != nil {
+		return data, err
+	}
+
+	rows, queryErr := db.Raw(`
+		SELECT * FROM post_save_tests
+		LEFT JOIN LEFT JOIN thread_save_tests
+		ON thread_save_tests.thread = post_save_tests.thread
+		WHERE thread_save_tests.user = ?
+		AND thread_save_tests.board = ?
+		AND thread_save_tests.thread = ?
+	`, userID, board, thread).Rows()
+	if queryErr != nil {
+		return data, queryErr
+	}
+
+	for rows.Next() {
+		var capture chanThreadPost
+		db.ScanRows(rows, &capture)
+		data.Posts = append(data.Posts, capture)
+	}
+
+	defer db.Close()
+
+	return data, nil
+}

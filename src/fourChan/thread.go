@@ -63,3 +63,25 @@ func SaveThread(w http.ResponseWriter, r *http.Request, p goat.Params, userStrin
 
 	services.SuccessMessage(w, "Thread has been saved")
 }
+
+// GetSavedThread - TODO
+func GetSavedThread(w http.ResponseWriter, r *http.Request, p goat.Params, userStringID string) {
+	board := p["board"]
+	thread := p["thread"]
+	if len(board) < 1 || len(thread) < 1 {
+		services.ErrorMessage(w, "Check parameters")
+	}
+
+	data, err := database.GetSavedThread(userStringID, board, thread)
+	if err != nil {
+		services.ErrorMessage(w, "Could not retreive saved thread")
+	}
+
+	jsonString, jsonError := services.GoroutineToJSON(data)
+	if jsonError != nil {
+		services.ErrorMessage(w, "Error building data for client")
+		return
+	}
+
+	services.Success(w, jsonString)
+}
