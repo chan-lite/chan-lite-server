@@ -124,7 +124,7 @@ func SaveThread(ID string, boardString string, threadString string, threadData *
 	// There can be up to 300 posts.
 	go func(posts []chanThreadPost) {
 		for i := 0; i < len(posts); i++ {
-			go func(post chanThreadPost) {
+			func(post chanThreadPost) {
 				row := PostSaveTest{
 					Thread:   threadString,
 					No:       post.No,
