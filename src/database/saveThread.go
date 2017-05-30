@@ -165,9 +165,11 @@ func GetSavedBoard(board string, userID string, page int, perPage int) (*ChanBoa
 		LEFT JOIN post_save_tests
 		ON post_save_tests.thread = thread_save_tests.thread
 		WHERE thread_save_tests.user = ?
+		AND thread_save_tests.board = ?
 		GROUP BY post_save_tests.thread
+		ORDER BY thread_save_tests.id DESC
 		LIMIT `+perPageString+` OFFSET `+offset+`
-	`, userID).Rows()
+	`, userID, board).Rows()
 	if dataError != nil {
 		return data, dataError
 	}
