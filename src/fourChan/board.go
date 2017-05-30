@@ -7,7 +7,6 @@ import (
 	"strconv"
 
 	"github.com/bahlo/goat"
-	"github.com/davecgh/go-spew/spew"
 )
 
 type chanBoardPageBoard struct {
@@ -71,7 +70,6 @@ func GetSavedBoard(w http.ResponseWriter, r *http.Request, p goat.Params, userSt
 
 	data, err := database.GetSavedBoard(board, userStringID, page, perPage)
 	if err != nil {
-		spew.Dump(err)
 		services.ErrorMessage(w, "Error receiving saved board for user")
 		return
 	}
