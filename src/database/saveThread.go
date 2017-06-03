@@ -198,7 +198,7 @@ func GetSavedThread(userID string, board string, thread string) (*ChanThreadPage
 
 	rows, queryErr := db.Raw(`
 		SELECT * FROM post_save_tests
-		LEFT JOIN LEFT JOIN thread_save_tests
+		LEFT JOIN thread_save_tests
 		ON thread_save_tests.thread = post_save_tests.thread
 		WHERE thread_save_tests.user = ?
 		AND thread_save_tests.board = ?

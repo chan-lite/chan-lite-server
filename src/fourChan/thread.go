@@ -75,6 +75,7 @@ func GetSavedThread(w http.ResponseWriter, r *http.Request, p goat.Params, userS
 	data, err := database.GetSavedThread(userStringID, board, thread)
 	if err != nil {
 		services.ErrorMessage(w, "Could not retreive saved thread")
+		return
 	}
 
 	jsonString, jsonError := services.GoroutineToJSON(data)
